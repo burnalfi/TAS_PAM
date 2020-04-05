@@ -1,10 +1,12 @@
 import os
 
 from backend.controller.credentials import CredentialController 
-form backend.controller.cafe import CafeController
+from backend.controller.cafe import CafeController
+from backend.controller.user import UserCtroller
 
 from backend.model.credentials import Credentials
 from backend.model.cafe import Cafe
+from backend.model.user import User
 
 from database import Database
 
@@ -19,6 +21,7 @@ db = Database(user="root", password="", host="127.0.0.1", database="flasktest")
 
 cc = CredentialController(db)
 cac = CafeController(db)
+uc = UserController(db)
 
 #-----------Credential Section----------
 
@@ -51,11 +54,11 @@ def get_cafe_by_establishment():
     return cac.get_by_est(request.headers.get('establisment')).get_json()
 
 @app.route("/cafe/get/all", methods=['POST'])
-def get_credential_all():
+def get_cafe_all():
     return jsonify({"cafe" : [i.get_dict() for i in cac.get_all()]})
 
 @app.route("/cafe/insert", methods=["POST"])
-def insert_credential():
+def insert_cafe():
     cac.insert_cafe(
         Cafe(
             establisment = request.form.get('establisment'),
@@ -65,8 +68,24 @@ def insert_credential():
             description = request.form.get('description')
         )
     )
-    return "CREDENTIAL INSERTED"
+    return "CESTABLISHMENT INSERTED"
 
+#----------User Sections---------------
+@app.route("/user/get/username", methods=['POST'])
+def get_user_by_username(): 
+    return uc.get_by_user(request.headers.get('username')).get_json()
+
+@app.route("/user/insert", methods=["POST"])
+def insert_user():
+    cac.insert_cafe(
+        Cafe(
+            username = request.form.get('username'),
+            password = request.form.get('password')
+        )
+    )
+    return "USER INSERTED"
+
+@app.route
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
