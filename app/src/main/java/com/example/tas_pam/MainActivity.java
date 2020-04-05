@@ -1,12 +1,15 @@
 package com.example.tas_pam;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.ResourceBusyException;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.tas_pam.dummy.DummyContent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -21,7 +24,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import java.io.InputStream;
+import java.util.Scanner;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, CafeFragment.OnListFragmentInteractionListener {
   private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
   private AppBarConfiguration mAppBarConfiguration;
   private boolean mPermissionDenied;
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     enableMyLocation();
   }
+
   private void enableMyLocation() {
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
@@ -76,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       // [END_EXCLUDE]
     }
   }
+
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
@@ -92,7 +100,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   @Override
   public void onClick(View v) {
+    this.fetchData();
     Intent intent= new Intent(MainActivity.this, MapsOfCafe.class);
     startActivity(intent);
+  }
+
+  private void fetchData() {
+//    getResources().openRawResource(R.raw.) //json
+//    try (InputStream is = getResources().openRawResource(R.raw.dummyCafe)) {
+//
+//    }
+    Context context = this;
+    InputStream inputStream = context.getResources().openRawResource(R.raw.dummy_cafe);
+    String jsonString = new Scanner(inputStream).useDelimiter("\\A").next();
+    System.err.println("json: "+ jsonString);
+  }
+
+  @Override
+  public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    System.err.println("onListFragmentInteraction : "+ item.content);
   }
 }
