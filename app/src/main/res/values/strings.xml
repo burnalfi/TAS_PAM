@@ -7,7 +7,12 @@
   <string name="nav_header_desc">Navigation header</string>
   <string name="action_settings">Settings</string>
 
-  <string name="menu_home">Home</string>
+  <string name="login_title">Welcome to Whatever it calls</string>
+  <string name="uname">Username</string>
+  <string name="pass">Password</string>
+  <string name="login_btn">Login</string>
+
+  <string name="menu_home">Temukan Cafe-mu</string>
   <string name="menu_gallery">Petanya dora</string>
   <string name="menu_slideshow">Slideshow</string>
 
