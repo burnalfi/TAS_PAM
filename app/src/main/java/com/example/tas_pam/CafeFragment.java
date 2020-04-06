@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.tas_pam.dummy.DummyContent;
-import com.example.tas_pam.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
@@ -73,6 +72,9 @@ public class CafeFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
       }
       recyclerView.setAdapter(new MyCafeRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+//      recyclerView.setAdapter(new MyCafeRecyclerViewAdapter(DummyContent.ITEMS, mListener)); ori from AS
+//      MainActivity ma= (MainActivity) getActivity();
+//      recyclerView.setAdapter(new MyCafeRecyclerViewAdapter((List<DummyContent.Cafe>) ma.mainViewModel.getCafes(), mListener));
     }
     return view;
   }
@@ -81,7 +83,7 @@ public class CafeFragment extends Fragment {
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    System.err.println("CafeFrag attacched");
+    System.err.println("CafeFrag attached");
     Log.e("adi", "CafeFrag onAttach: ");
     if (context instanceof OnListFragmentInteractionListener) {
       mListener = (OnListFragmentInteractionListener) context;
@@ -109,6 +111,6 @@ public class CafeFragment extends Fragment {
    */
   public interface OnListFragmentInteractionListener {
     // TODO: Update argument type and name
-    void onListFragmentInteraction(DummyItem item);
+    void onListFragmentInteraction(DummyContent.Cafe item);
   }
 }
