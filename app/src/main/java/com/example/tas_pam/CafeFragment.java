@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.tas_pam.dummy.DummyContent;
-import com.example.tas_pam.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ public class CafeFragment extends Fragment {
   private static final String ARG_COLUMN_COUNT = "column-count";
   // TODO: Customize parameters
   private int mColumnCount = 1;
+  private RecyclerView recyclerView;
   private OnListFragmentInteractionListener mListener;
 
   /**
@@ -39,6 +40,12 @@ public class CafeFragment extends Fragment {
   public CafeFragment() {
   }
 
+  Observer<List<DummyContent.Cafe>> cafeFragmentObserver= new Observer<List<DummyContent.Cafe>>() {
+    @Override
+    public void onChanged(List<DummyContent.Cafe> cafes) {
+      recyclerView.setAdapter(new MyCafeRecyclerViewAdapter(cafes, mListener));
+    }
+  };
   // TODO: Customize parameter initialization
   @SuppressWarnings("unused")
   public static CafeFragment newInstance(int columnCount) {
@@ -52,27 +59,28 @@ public class CafeFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     if (getArguments() != null) {
       mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
     }
+    MainActivity ma= (MainActivity) getActivity();
+    ma.mainViewModel.getCafes().observe(this, cafeFragmentObserver);
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_cafe_list, container, false);
-
     // Set the adapter
     if (view instanceof RecyclerView) {
       Context context = view.getContext();
-      RecyclerView recyclerView = (RecyclerView) view;
+      this.recyclerView = (RecyclerView) view;
       if (mColumnCount <= 1) {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
       } else {
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
       }
       recyclerView.setAdapter(new MyCafeRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+//      recyclerView.setAdapter(new MyCafeRecyclerViewAdapter(DummyContent.ITEMS, mListener)); ori from AS
     }
     return view;
   }
@@ -81,7 +89,7 @@ public class CafeFragment extends Fragment {
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    System.err.println("CafeFrag attacched");
+    System.err.println("CafeFrag attached");
     Log.e("adi", "CafeFrag onAttach: ");
     if (context instanceof OnListFragmentInteractionListener) {
       mListener = (OnListFragmentInteractionListener) context;
@@ -109,6 +117,8 @@ public class CafeFragment extends Fragment {
    */
   public interface OnListFragmentInteractionListener {
     // TODO: Update argument type and name
-    void onListFragmentInteraction(DummyItem item);
+    void onListFragmentInteraction(DummyContent.Cafe item);
   }
+
+
 }

@@ -16,12 +16,12 @@ public class DummyContent {
   /**
    * An array of sample (dummy) items.
    */
-  public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+  public static final List<Cafe> ITEMS = new ArrayList<Cafe>();
 
   /**
    * A map of sample (dummy) items, by ID.
    */
-  public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
+  public static final Map<String, Cafe> ITEM_MAP = new HashMap<String, Cafe>();
 
   private static final int COUNT = 25;
 
@@ -32,13 +32,13 @@ public class DummyContent {
     }
   }
 
-  private static void addItem(DummyItem item) {
+  private static void addItem(Cafe item) {
     ITEMS.add(item);
     ITEM_MAP.put(item.id, item);
   }
 
-  private static DummyItem createDummyItem(int position) {
-    return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
+  private static Cafe createDummyItem(int position) {
+    return new Cafe(String.valueOf(position), makeDetails(position));
   }
 
   private static String makeDetails(int position) {
@@ -52,21 +52,24 @@ public class DummyContent {
 
   /**
    * A dummy item representing a piece of content.
+   * refactor? after 'resposie' ?
    */
-  public static class DummyItem {
-    public final String id;
-    public final String content;
-    public final String details;
+  public static class Cafe {
+    public final String id; // may used in view
+    public final String establishment;
+    public String hours;
+    public String phone;
+    public String address;
+    public String description;
 
-    public DummyItem(String id, String content, String details) {
+    public Cafe(String id, String establishment) {
       this.id = id;
-      this.content = content;
-      this.details = details;
+      this.establishment= establishment;
     }
 
     @Override
     public String toString() {
-      return content;
+      return establishment+ description;
     }
   }
 }

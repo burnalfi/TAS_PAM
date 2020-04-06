@@ -10,4 +10,5 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".CafeFragment"
-    tools:listitem="@layout/fragment_cafe" />
+    tools:listitem="@layout/fragment_cafe"
+    />
