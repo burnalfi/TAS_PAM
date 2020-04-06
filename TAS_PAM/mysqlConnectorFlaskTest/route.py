@@ -2,7 +2,7 @@ import os
 
 from backend.controller.credentials import CredentialController 
 from backend.controller.cafe import CafeController
-from backend.controller.user import UserCtroller
+from backend.controller.user import UserController
 
 from backend.model.credentials import Credentials
 from backend.model.cafe import Cafe
@@ -49,7 +49,7 @@ def insert_credential():
 
 #----------Cafe Sections---------------
 
-@app.route("/cafe/get/establisment", methods=['POST'])
+@app.route("/cafe/get/establishment", methods=['POST'])
 def get_cafe_by_establishment(): 
     return cac.get_by_est(request.headers.get('establisment')).get_json()
 
@@ -64,11 +64,11 @@ def insert_cafe():
             establisment = request.form.get('establisment'),
             hours = request.form.get('hours'),
             phone = request.form.get('phone'),
-            address = request.form.get('address')
+            address = request.form.get('address'),
             description = request.form.get('description')
         )
     )
-    return "CESTABLISHMENT INSERTED"
+    return "ESTABLISHMENT INSERTED"
 
 #----------User Sections---------------
 @app.route("/user/get/username", methods=['POST'])
@@ -77,15 +77,13 @@ def get_user_by_username():
 
 @app.route("/user/insert", methods=["POST"])
 def insert_user():
-    cac.insert_cafe(
-        Cafe(
+    uc.insert_user(
+        User(
             username = request.form.get('username'),
             password = request.form.get('password')
         )
     )
     return "USER INSERTED"
-
-@app.route
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

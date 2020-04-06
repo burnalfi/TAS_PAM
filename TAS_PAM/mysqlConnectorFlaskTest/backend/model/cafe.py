@@ -10,7 +10,11 @@ class Cafe:
         self.description = description 
 
     def get_json(self):
-        return jsonify(self.establisment, self.hours, self.phone, self.address, self.description)
+        return jsonify(establisment = self.establisment, 
+                       hours = self.hours, 
+                       phone = self.phone, 
+                       address = self.address, 
+                       description = self.description)
 
 
     def get_dict(self):

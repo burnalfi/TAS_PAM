@@ -11,14 +11,14 @@ class UserController:
         cur = conn.cursor()
         cur.execute("SELECT * FROM user where username='{}'".format(user))
         result = cur.fetchone()
-        cred = Credentials(result[0], result[1])
-        return cred
+        user = User(result[0], result[1])
+        return user
 
     def get_all(self):
         conn = self.db.get_connection() 
         cur = conn.cursor()
         cur.execute("SELECT * FROM user")
-        return [Credentials(i[0], i[1]) for i in cur.fetchall()]
+        return [User(i[0], i[1]) for i in cur.fetchall()]
 
     def insert_user(self, user):
         username = user.username
