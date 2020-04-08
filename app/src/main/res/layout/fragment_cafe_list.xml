@@ -5,10 +5,9 @@
     android:id="@+id/list"
     android:name="com.example.tas_pam.CafeFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".CafeFragment"
-    tools:listitem="@layout/fragment_cafe"
-    />
+    tools:listitem="@layout/fragment_cafe" />
