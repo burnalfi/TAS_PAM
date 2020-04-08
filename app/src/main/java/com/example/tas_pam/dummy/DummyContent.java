@@ -18,42 +18,6 @@ public class DummyContent {
    */
   public static final List<Cafe> ITEMS = new ArrayList<Cafe>();
 
-  /**
-   * A map of sample (dummy) items, by ID.
-   */
-  public static final Map<String, Cafe> ITEM_MAP = new HashMap<String, Cafe>();
-
-  private static final int COUNT = 25;
-
-  static {
-    // Add some sample items.
-    for (int i = 1; i <= COUNT; i++) {
-      addItem(createDummyItem(i));
-    }
-  }
-
-  private static void addItem(Cafe item) {
-    ITEMS.add(item);
-    ITEM_MAP.put(item.id, item);
-  }
-
-  private static Cafe createDummyItem(int position) {
-    return new Cafe(String.valueOf(position), makeDetails(position));
-  }
-
-  private static String makeDetails(int position) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Details about Item: ").append(position);
-    for (int i = 0; i < position; i++) {
-      builder.append("\nMore details information here.");
-    }
-    return builder.toString();
-  }
-
-  /**
-   * A dummy item representing a piece of content.
-   * refactor? after 'resposie' ?
-   */
   public static class Cafe {
     public final String id; // may used in view
     public final String establishment;
