@@ -1,6 +1,7 @@
 package com.example.tas_pam;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,13 +11,16 @@ import android.view.View;
 import android.view.Menu;
 
 import com.example.tas_pam.dummy.DummyContent;
+import com.example.tas_pam.ui.slideshow.SlideshowViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDeepLinkBuilder;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -24,13 +28,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, CafeFragment.OnListFragmentInteractionListener {
   private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
   private AppBarConfiguration mAppBarConfiguration;
   private boolean mPermissionDenied;
+  public SlideshowViewModel mainViewModel; // refactor class name?
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
     NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
     NavigationUI.setupWithNavController(navigationView, navController);
-
     enableMyLocation();
+    // app level viewModel? i am not sure, it work on TTS
+    mainViewModel= new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(SlideshowViewModel.class);
   }
 
   private void enableMyLocation() {
@@ -99,25 +110,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   }
 
   @Override
+  protected void onStart() {
+    super.onStart();
+    try {
+      this.fetchData();
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    System.err.println("ma onstart");
+  }
+
+  @Override
   public void onClick(View v) {
-    this.fetchData();
     Intent intent= new Intent(MainActivity.this, MapsOfCafe.class);
     startActivity(intent);
   }
 
-  private void fetchData() {
-//    getResources().openRawResource(R.raw.) //json
-//    try (InputStream is = getResources().openRawResource(R.raw.dummyCafe)) {
-//
-//    }
+  private void fetchData() throws JSONException {
     Context context = this;
     InputStream inputStream = context.getResources().openRawResource(R.raw.dummy_cafe);
     String jsonString = new Scanner(inputStream).useDelimiter("\\A").next();
-    System.err.println("json: "+ jsonString);
+    JSONObject cafes= new JSONObject(jsonString);
+    ArrayList<DummyContent.Cafe> dataCafe= new ArrayList<>();
+    for (int i= 0; i<cafes.length();i++) {
+      JSONObject cafe= (JSONObject) cafes.get(String.valueOf(i));
+      DummyContent.Cafe c= new DummyContent.Cafe(String.valueOf(i), cafe.optString("establishment"));
+      c.address= cafe.optString("address");
+      c.description= cafe.optString("description");
+      c.hours= cafe.optString("hours");
+      c.phone= cafe.optString("phone");
+      dataCafe.add(c);
+//      System.err.println("loop: "+ cafe.optString("establishment", "nama cafe"));
+    }
+//    set viewModel, currently based on dummy data
+    mainViewModel.setCafes(dataCafe);
   }
 
   @Override
-  public void onListFragmentInteraction(DummyContent.DummyItem item) {
-    System.err.println("onListFragmentInteraction : "+ item.content);
+  public void onListFragmentInteraction(DummyContent.Cafe item) {
+    System.err.println("onListFragmentInteraction : "+ item.establishment);
   }
 }
