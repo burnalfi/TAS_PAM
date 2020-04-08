@@ -28,8 +28,14 @@
         android:name="myArg"
         app:argType="string" />
     <action
+<<<<<<< HEAD
         android:id="@+id/action_nav_home_second_to_nav_slideshow3"
         app:destination="@id/nav_slideshow" />
+=======
+        android:id="@+id/action_nav_home_second_to_nav_slideshow"
+        app:destination="@id/nav_slideshow"
+        app:launchSingleTop="false" />
+>>>>>>> 41863978276096a804eb3d99815756484081e40e
   </fragment>
 
   <fragment
@@ -43,4 +49,12 @@
       android:name="com.example.tas_pam.CafeFragment"
       android:label="@string/menu_slideshow"
       tools:layout="@layout/fragment_cafe_list" />
+  <action
+    android:id="@+id/activate_cafe_listing"
+    app:destination="@id/nav_slideshow">
+<!--    <argument-->
+<!--      android:name="a"-->
+<!--      app:argType="reference"-->
+<!--      android:defaultValue="" />-->
+  </action>
 </navigation>

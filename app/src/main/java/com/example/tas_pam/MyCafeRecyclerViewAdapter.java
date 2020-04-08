@@ -23,7 +23,11 @@ public class MyCafeRecyclerViewAdapter extends RecyclerView.Adapter<MyCafeRecycl
   private final OnListFragmentInteractionListener mListener;
 
   public MyCafeRecyclerViewAdapter(List<DummyContent.Cafe> items, OnListFragmentInteractionListener listener) {
+<<<<<<< HEAD
     mCafes = items;
+=======
+    mCafes = items; // LiveData or MutableLD
+>>>>>>> 41863978276096a804eb3d99815756484081e40e
     mListener = listener;
   }
 
@@ -38,7 +42,15 @@ public class MyCafeRecyclerViewAdapter extends RecyclerView.Adapter<MyCafeRecycl
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.mItem = mCafes.get(position);
     holder.mIdView.setText(mCafes.get(position).id);
+<<<<<<< HEAD
     holder.mContentView.setText(mCafes.get(position).description);
+=======
+    holder.cafeName.setText(mCafes.get(position).establishment);
+    holder.cafeOpenHour.setText(mCafes.get(position).hours);
+    holder.cafePhone.setText(mCafes.get(position).phone);
+    holder.cafeAddress.setText(mCafes.get(position).address);
+    holder.cafeDescription.setText(mCafes.get(position).description);
+>>>>>>> 41863978276096a804eb3d99815756484081e40e
 
     holder.mView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -60,19 +72,32 @@ public class MyCafeRecyclerViewAdapter extends RecyclerView.Adapter<MyCafeRecycl
   public class ViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
     public final TextView mIdView;
+<<<<<<< HEAD
     public final TextView mContentView;
+=======
+    public final TextView cafeName;
+    public final TextView cafeOpenHour;
+    public final TextView cafePhone;
+    public final TextView cafeDescription;
+    public final TextView cafeAddress;
+
+>>>>>>> 41863978276096a804eb3d99815756484081e40e
     public DummyContent.Cafe mItem;
 
     public ViewHolder(View view) {
       super(view);
       mView = view;
       mIdView = (TextView) view.findViewById(R.id.item_number);
-      mContentView = (TextView) view.findViewById(R.id.content);
+      cafeName = (TextView) view.findViewById(R.id.cafeName);
+      cafeOpenHour= (TextView) view.findViewById(R.id.cafeOpenHour);
+      cafePhone= (TextView) view.findViewById(R.id.cafePhone);
+      cafeDescription= (TextView) view.findViewById(R.id.cafeDescripton);
+      cafeAddress= (TextView) view.findViewById(R.id.cafeAddress);
     }
 
     @Override
     public String toString() {
-      return super.toString() + " '" + mContentView.getText() + "'";
+      return super.toString() + " '" + cafeName.getText() + "'";
     }
   }
 }

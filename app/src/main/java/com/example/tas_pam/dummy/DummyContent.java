@@ -18,6 +18,7 @@ public class DummyContent {
    */
   public static final List<Cafe> ITEMS = new ArrayList<Cafe>();
 
+<<<<<<< HEAD
   /**
    * A map of sample (dummy) items, by ID.
    */
@@ -53,6 +54,8 @@ public class DummyContent {
   /**
    * A dummy item representing a piece of content.
    */
+=======
+>>>>>>> 41863978276096a804eb3d99815756484081e40e
   public static class Cafe {
     public final String id; // may used in view
     public final String establishment;

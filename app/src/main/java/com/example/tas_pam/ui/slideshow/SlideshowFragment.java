@@ -16,20 +16,19 @@ import com.example.tas_pam.R;
 
 public class SlideshowFragment extends Fragment {
 
-  private SlideshowViewModel slideshowViewModel;
-
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
-    slideshowViewModel =
-            ViewModelProviders.of(this).get(SlideshowViewModel.class);
     View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
     final TextView textView = root.findViewById(R.id.text_slideshow);
+<<<<<<< HEAD
 //    slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
 //      @Override
 //      public void onChanged(@Nullable String s) {
 //        textView.setText(s);
 //      }
 //    });
+=======
+>>>>>>> 41863978276096a804eb3d99815756484081e40e
     return root;
   }
 }
