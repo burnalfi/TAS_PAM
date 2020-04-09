@@ -2,31 +2,30 @@ package com.example.tas_pam;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Instrumentation;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.media.ResourceBusyException;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Toast;
 
 import com.example.tas_pam.dummy.DummyContent;
-import com.example.tas_pam.ui.slideshow.SlideshowViewModel;
+import com.example.tas_pam.dummy.CafesViewModel;
+import com.example.tas_pam.dummy.SingletonNameViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDeepLinkBuilder;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -34,12 +33,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, CafeFragment.OnListFragmentInteractionListener {
@@ -47,7 +47,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   private static final int GMAP_ACTIVITY = 2;
   private AppBarConfiguration mAppBarConfiguration;
   private boolean mPermissionDenied;
-  public SlideshowViewModel mainViewModel; // refactor class name?
+  public CafesViewModel mainViewModel; // refactor class name?
+  private NavController navController;
+
+  public final androidx.lifecycle.Observer<List<DummyContent.Cafe>> verboseToStdErr= new Observer<List<DummyContent.Cafe>>() {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void onChanged(List<DummyContent.Cafe> cafes) {
+      String TAG= "observer ma";
+      Log.e(TAG, "onChanged: ");
+      cafes.forEach(System.err::println);
+    }
+  };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -65,26 +76,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
             .setDrawerLayout(drawer)
             .build();
-    NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+    navController = Navigation.findNavController(this, R.id.nav_host_fragment);
     NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
     NavigationUI.setupWithNavController(navigationView, navController);
     enableMyLocation();
-    // app level viewModel? i am not sure, it work on TTS
-    mainViewModel= new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(SlideshowViewModel.class);
+
+    SingletonNameViewModelFactory singletonNameViewModelFactory= new SingletonNameViewModelFactory(CafesViewModel.getInstance());
+//    mainViewModel= new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(CafesViewModel.class); old
+    mainViewModel= ViewModelProviders.of(this, singletonNameViewModelFactory).get(CafesViewModel.class);
+    mainViewModel.getCafes().observe(this, verboseToStdErr);
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
+    int numCafe;
     if (requestCode==GMAP_ACTIVITY) {
       if (resultCode==Activity.RESULT_OK) {
-        int numCafe= data.getIntExtra("numCafe", 0);
+        numCafe= data.getIntExtra("numCafe", 0);
+        Toast.makeText(this, numCafe, Toast.LENGTH_LONG).show();
         if (numCafe>0) {
 //          activate listing
         }
       }
       if (resultCode==Activity.RESULT_CANCELED) {
-        Toast.makeText(this, "you cancel?", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.unintended_map_activity_end, Toast.LENGTH_LONG).show();
+        try {
+//          numCafe= data.getIntExtra("numCafe", 0);
+//          Toast.makeText(this, numCafe, Toast.LENGTH_LONG).show();
+//          for (DummyContent.Cafe c: from) {
+//            System.err.println("c name: "+ c.establishment);
+//          }
+          navController.navigate(R.id.activate_cafe_listing);
+
+        } catch (NullPointerException e) {
+          e.printStackTrace();
+        }
       }
     }
   }
