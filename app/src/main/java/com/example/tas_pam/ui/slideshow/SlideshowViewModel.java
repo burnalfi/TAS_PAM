@@ -27,4 +27,13 @@ public class SlideshowViewModel extends ViewModel {
   public LiveData<List<DummyContent.Cafe>> getCafes() {
     return cafes;
   }
+
+  public void addCafe(DummyContent.Cafe x) {
+    List<DummyContent.Cafe> exisitingCafes= cafes.getValue();
+    if (exisitingCafes.add(x)) {
+      cafes.setValue(exisitingCafes);
+    } else {
+      System.err.println("err populating live data!!!! ");
+    }
+  }
 }

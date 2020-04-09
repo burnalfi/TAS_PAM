@@ -1,14 +1,19 @@
 package com.example.tas_pam;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.media.ResourceBusyException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.example.tas_pam.dummy.DummyContent;
 import com.example.tas_pam.ui.slideshow.SlideshowViewModel;
@@ -17,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -38,6 +44,7 @@ import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, CafeFragment.OnListFragmentInteractionListener {
   private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+  private static final int GMAP_ACTIVITY = 2;
   private AppBarConfiguration mAppBarConfiguration;
   private boolean mPermissionDenied;
   public SlideshowViewModel mainViewModel; // refactor class name?
@@ -64,6 +71,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     enableMyLocation();
     // app level viewModel? i am not sure, it work on TTS
     mainViewModel= new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(SlideshowViewModel.class);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode==GMAP_ACTIVITY) {
+      if (resultCode==Activity.RESULT_OK) {
+        int numCafe= data.getIntExtra("numCafe", 0);
+        if (numCafe>0) {
+//          activate listing
+        }
+      }
+      if (resultCode==Activity.RESULT_CANCELED) {
+        Toast.makeText(this, "you cancel?", Toast.LENGTH_LONG).show();
+      }
+    }
   }
 
   private void enableMyLocation() {
@@ -123,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   @Override
   public void onClick(View v) {
     Intent intent= new Intent(MainActivity.this, MapsOfCafe.class);
-    startActivity(intent);
+    startActivityForResult(intent, GMAP_ACTIVITY);
   }
 
   private void fetchData() throws JSONException {

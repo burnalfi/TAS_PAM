@@ -16,7 +16,8 @@
   <string name="menu_gallery">Petanya dora</string>
   <string name="menu_slideshow">Listing data</string>
 
+  <string name="home_fragment_text">Please locate yourself on google map with pressing bottom right button</string>
   <string name="home_second">Home Second</string>
   <string name="title_activity_maps_of_cafe">Emg da duit</string>
-  <string name="open_map_activity">Bentar dora sedang bekerja</string>
+  <string name="open_map_activity">Please wait app is trying to get precise location</string>
 </resources>
